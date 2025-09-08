@@ -8,75 +8,75 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    /* Developer-focused design system */
-    --background: 240 10% 3.9%;
-    --foreground: 0 0% 98%;
+    /* Blue and white design system */
+    --background: 0 0% 100%;
+    --foreground: 223 84% 4.9%;
 
-    --card: 240 10% 3.9%;
-    --card-foreground: 0 0% 98%;
+    --card: 0 0% 100%;
+    --card-foreground: 223 84% 4.9%;
 
-    --popover: 240 5% 6%;
-    --popover-foreground: 0 0% 98%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 223 84% 4.9%;
 
-    /* Tech-inspired primary colors */
+    /* Beautiful blue primary palette */
     --primary: 217 91% 60%;
-    --primary-foreground: 0 0% 98%;
+    --primary-foreground: 0 0% 100%;
     --primary-glow: 217 91% 70%;
 
-    /* Clean secondary palette */
-    --secondary: 240 4% 16%;
-    --secondary-foreground: 0 0% 98%;
+    /* Clean light secondary palette */
+    --secondary: 217 32% 97%;
+    --secondary-foreground: 223 84% 4.9%;
 
-    --muted: 240 5% 6%;
-    --muted-foreground: 240 5% 64.9%;
+    --muted: 217 32% 97%;
+    --muted-foreground: 215 16.3% 46.9%;
 
     --accent: 142 76% 36%;
-    --accent-foreground: 0 0% 98%;
+    --accent-foreground: 0 0% 100%;
 
     --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 98%;
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 240 4% 16%;
-    --input: 240 4% 16%;
+    --border: 217 32% 91%;
+    --input: 217 32% 97%;
     --ring: 217 91% 60%;
 
     --radius: 0.75rem;
 
-    /* Code and syntax colors */
-    --code-bg: 240 5% 6%;
-    --code-border: 240 4% 12%;
-    --syntax-keyword: 300 100% 75%;
+    /* Code and syntax colors - blue theme */
+    --code-bg: 217 32% 98%;
+    --code-border: 217 32% 91%;
+    --syntax-keyword: 217 91% 60%;
     --syntax-string: 142 76% 36%;
-    --syntax-number: 35 100% 74%;
-    --syntax-comment: 240 5% 64.9%;
+    --syntax-number: 262 83% 58%;
+    --syntax-comment: 215 16.3% 46.9%;
 
     /* Status colors */
     --success: 142 76% 36%;
-    --success-foreground: 0 0% 98%;
+    --success-foreground: 0 0% 100%;
     --warning: 35 100% 74%;
-    --warning-foreground: 240 10% 3.9%;
+    --warning-foreground: 223 84% 4.9%;
 
-    /* Gradients */
+    /* Blue gradients */
     --gradient-primary: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary-glow)));
-    --gradient-subtle: linear-gradient(180deg, hsl(var(--background)), hsl(240 10% 2%));
-    --gradient-card: linear-gradient(145deg, hsl(240 5% 6%), hsl(240 4% 8%));
+    --gradient-subtle: linear-gradient(180deg, hsl(0 0% 100%), hsl(217 32% 98%));
+    --gradient-card: linear-gradient(145deg, hsl(0 0% 100%), hsl(217 32% 99%));
 
-    /* Shadows and effects */
-    --shadow-elegant: 0 10px 30px -10px hsl(var(--primary) / 0.3);
+    /* Elegant shadows with blue tint */
+    --shadow-elegant: 0 10px 30px -10px hsl(var(--primary) / 0.2);
     --shadow-glow: 0 0 40px hsl(var(--primary-glow) / 0.15);
-    --shadow-card: 0 4px 20px -2px hsl(240 10% 2% / 0.8);
+    --shadow-card: 0 4px 20px -2px hsl(217 32% 80% / 0.3);
 
     /* Animations */
     --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     --transition-bounce: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
 
-    --sidebar-background: 240 5% 6%;
-    --sidebar-foreground: 0 0% 98%;
+    --sidebar-background: 217 32% 98%;
+    --sidebar-foreground: 223 84% 4.9%;
     --sidebar-primary: 217 91% 60%;
-    --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 240 4% 16%;
-    --sidebar-accent-foreground: 0 0% 98%;
-    --sidebar-border: 240 4% 16%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 217 32% 95%;
+    --sidebar-accent-foreground: 223 84% 4.9%;
+    --sidebar-border: 217 32% 91%;
     --sidebar-ring: 217 91% 60%;
   }
 
@@ -125,7 +125,7 @@ All colors MUST be HSL.
   }
 
   body {
-    @apply bg-background text-foreground font-mono antialiased;
+    @apply bg-background text-foreground font-sans antialiased;
     background: var(--gradient-subtle);
   }
 
