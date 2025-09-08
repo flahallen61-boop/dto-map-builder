@@ -22,15 +22,25 @@ interface VisualMappingProps {
   onMappingChange: (fieldMapping: FieldMapping, defaults: DefaultValues) => void;
 }
 
-// Sample BaseRequest fields - in real app this would come from your backend
+// BaseRequest fields based on your API structure
 const BASE_REQUEST_FIELDS = [
+  {
+    name: 'currentLocation.lat',
+    type: 'number',
+    description: 'Current latitude coordinate'
+  },
+  {
+    name: 'currentLocation.lng',
+    type: 'number',
+    description: 'Current longitude coordinate'
+  },
   {
     name: 'sourceLocation.lat',
     type: 'number',
     description: 'Source latitude coordinate'
   },
   {
-    name: 'sourceLocation.lng', 
+    name: 'sourceLocation.lng',
     type: 'number',
     description: 'Source longitude coordinate'
   },
@@ -45,24 +55,144 @@ const BASE_REQUEST_FIELDS = [
     description: 'Source postal code'
   },
   {
-    name: 'currentLocation.lat',
+    name: 'destinationLocation.lat',
     type: 'number',
-    description: 'Current latitude coordinate'
+    description: 'Destination latitude coordinate'
   },
   {
-    name: 'currentLocation.lng',
-    type: 'number', 
-    description: 'Current longitude coordinate'
+    name: 'destinationLocation.lng',
+    type: 'number',
+    description: 'Destination longitude coordinate'
   },
   {
-    name: 'destinationLocation.address',
+    name: 'destinationLocation.name',
     type: 'string',
-    description: 'Destination full address'
+    description: 'Destination location name'
   },
   {
-    name: 'userType',
+    name: 'destinationLocation.postcode',
     type: 'string',
-    description: 'Type of user making request'
+    description: 'Destination postal code'
+  },
+  {
+    name: 'passengerCount',
+    type: 'number',
+    description: 'Number of passengers'
+  },
+  {
+    name: 'distance',
+    type: 'string',
+    description: 'Driving distance in kilometers'
+  },
+  {
+    name: 'sourceTimeZone',
+    type: 'string',
+    description: 'Pickup timezone'
+  },
+  {
+    name: 'mappingSolution',
+    type: 'number',
+    description: 'Mapping solution ID'
+  },
+  {
+    name: 'travelDateTime',
+    type: 'string',
+    description: 'Travel date and time'
+  },
+  {
+    name: 'estimatedTime',
+    type: 'string',
+    description: 'Estimated travel time'
+  },
+  {
+    name: 'customerId',
+    type: 'number',
+    description: 'Customer ID'
+  },
+  {
+    name: 'promoCode',
+    type: 'string',
+    description: 'Promotional code'
+  },
+  {
+    name: 'bookingSource',
+    type: 'number',
+    description: 'Booking source ID'
+  },
+  {
+    name: 'bookingSourceType',
+    type: 'number',
+    description: 'Booking source type ID'
+  },
+  {
+    name: 'bookingSelect',
+    type: 'number',
+    description: 'Booking selection ID'
+  },
+  {
+    name: 'appPlatformId',
+    type: 'number',
+    description: 'Application platform ID'
+  },
+  {
+    name: 'b2bAccountDetailId',
+    type: 'number',
+    description: 'B2B account detail ID'
+  },
+  {
+    name: 'agentDetailId',
+    type: 'number',
+    description: 'Agent detail ID'
+  },
+  {
+    name: 'vehicleCategoryId',
+    type: 'number',
+    description: 'Vehicle category ID'
+  },
+  {
+    name: 'vehicleClass',
+    type: 'number',
+    description: 'Vehicle class'
+  },
+  {
+    name: 'vehicleGroupIds',
+    type: 'array',
+    description: 'Vehicle group IDs array'
+  },
+  {
+    name: 'allowPastDateBooking',
+    type: 'boolean',
+    description: 'Allow past date booking flag'
+  },
+  {
+    name: 'fromB2BPortal',
+    type: 'boolean',
+    description: 'From B2B portal flag'
+  },
+  {
+    name: 'vReferenceNo',
+    type: 'string',
+    description: 'Vehicle reference number'
+  },
+  {
+    name: 'driverDetailIds',
+    type: 'array',
+    description: 'Driver detail IDs'
+  },
+  {
+    name: 'routePointsGeoJSON',
+    type: 'string',
+    description: 'Route points in GeoJSON format'
+  },
+  {
+    name: 'multiStopsAry',
+    type: 'array',
+    description: 'Multiple stops array'
+  },
+  {
+    name: 'userId',
+    type: 'number',
+    description: 'User ID'
   }
 ];
 
@@ -111,6 +241,11 @@ export const VisualMapping = ({ schema, className, onMappingChange }: VisualMapp
         delete newMapping[baseField];
         return newMapping;
       });
+      // Initialize with empty default value to show input
+      setDefaults(prev => ({
+        ...prev,
+        [baseField]: ''
+      }));
     } else {
       // Map to API field
       setFieldMapping(prev => ({
@@ -151,6 +286,7 @@ export const VisualMapping = ({ schema, className, onMappingChange }: VisualMapp
       case 'string': return 'bg-syntax-string/20 text-syntax-string border-syntax-string/30';
       case 'number': return 'bg-syntax-number/20 text-syntax-number border-syntax-number/30';
       case 'boolean': return 'bg-primary/20 text-primary border-primary/30';
+      case 'array': return 'bg-warning/20 text-warning border-warning/30';
       default: return 'bg-muted/20 text-muted-foreground border-muted/30';
     }
   };
@@ -221,7 +357,7 @@ export const VisualMapping = ({ schema, className, onMappingChange }: VisualMapp
                   </Select>
 
                   {/* Show default value input when USE_DEFAULT is selected */}
-                  {defaults.hasOwnProperty(field.name) && (
+                  {defaults.hasOwnProperty(field.name) && !fieldMapping[field.name] && (
                     <div className="space-y-1">
                       <Label htmlFor={`default-${field.name}`} className="text-xs text-muted-foreground">
                         Default Value
