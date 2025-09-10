@@ -4,7 +4,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
-import { Upload, Code, Loader2, CheckCircle, AlertCircle } from 'lucide-react';
+import { Upload, Code, Loader2, CheckCircle, AlertCircle, Sparkles } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 interface ApiSpecInputProps {
@@ -48,6 +48,27 @@ export const ApiSpecInput = ({ onSchemaSubmit }: ApiSpecInputProps) => {
         validateJson(content);
       };
       reader.readAsText(file);
+    }
+  };
+
+  const beautifyJson = () => {
+    try {
+      if (!schema.trim()) return;
+      const parsed = JSON.parse(schema);
+      const beautified = JSON.stringify(parsed, null, 2);
+      setSchema(beautified);
+      setIsValid(true);
+      toast({
+        title: "JSON Beautified",
+        description: "Your JSON has been formatted successfully!",
+        variant: "default",
+      });
+    } catch (error) {
+      toast({
+        title: "Invalid JSON",
+        description: "Cannot beautify invalid JSON. Please check your syntax.",
+        variant: "destructive",
+      });
     }
   };
 
@@ -137,6 +158,16 @@ export const ApiSpecInput = ({ onSchemaSubmit }: ApiSpecInputProps) => {
                 className="hidden"
                 id="file-upload"
               />
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={beautifyJson}
+                disabled={!schema.trim()}
+                className="bg-secondary border-border hover:bg-muted"
+              >
+                <Sparkles className="h-4 w-4 mr-2" />
+                Beautify
+              </Button>
               <Button
                 variant="outline"
                 size="sm"
