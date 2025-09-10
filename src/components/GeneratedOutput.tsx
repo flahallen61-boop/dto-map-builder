@@ -40,8 +40,20 @@ export const GeneratedOutput = ({ fieldMapping, defaults, className }: Generated
   const configJson = {
     b2bName: className.toLowerCase().replace(/request$/, ''),
     requestClass: `com.example.demoVersion.dto.${className}`,
-    fieldMapping,
-    defaults
+    fieldMapping: {
+      ...fieldMapping,
+      // Always include currentLocation coordinates in fieldMapping
+      ...(defaults['currentLocation.lat'] !== undefined && { 'currentLocation.lat': defaults['currentLocation.lat'] }),
+      ...(defaults['currentLocation.lng'] !== undefined && { 'currentLocation.lng': defaults['currentLocation.lng'] })
+    },
+    defaults: {
+      // Remove currentLocation coordinates from defaults as they should be in fieldMapping
+      ...Object.fromEntries(
+        Object.entries(defaults).filter(([key]) => 
+          key !== 'currentLocation.lat' && key !== 'currentLocation.lng'
+        )
+      )
+    }
   };
 
   const copyToClipboard = () => {
