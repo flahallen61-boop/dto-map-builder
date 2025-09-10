@@ -56,48 +56,52 @@ const Index = () => {
 
       {/* Main Content */}
       <div className="container mx-auto px-4 py-8">
-        <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
-          {/* Left Column - Input and Mapping */}
-          <div className="space-y-6">
-            {/* Step 1: Schema Input */}
+        <div className="max-w-4xl mx-auto space-y-8">
+          {/* Step 1: Schema Input */}
+          <div className="space-y-4">
+            <div className="flex items-center gap-3">
+              <div className="flex items-center justify-center w-8 h-8 bg-primary rounded-full text-primary-foreground font-bold text-sm">
+                1
+              </div>
+              <h2 className="text-lg font-semibold text-foreground">Import Schema</h2>
+            </div>
+            <ApiSpecInput onSchemaSubmit={handleSchemaSubmit} />
+          </div>
+
+          {/* Step Arrow */}
+          {schema && (
+            <div className="flex justify-center">
+              <ArrowRight className="h-6 w-6 text-primary animate-pulse rotate-90" />
+            </div>
+          )}
+
+          {/* Step 2: Visual Mapping */}
+          {schema && (
             <div className="space-y-4">
               <div className="flex items-center gap-3">
                 <div className="flex items-center justify-center w-8 h-8 bg-primary rounded-full text-primary-foreground font-bold text-sm">
-                  1
+                  2
                 </div>
-                <h2 className="text-lg font-semibold text-foreground">Import Schema</h2>
+                <h2 className="text-lg font-semibold text-foreground">Configure Mapping</h2>
               </div>
-              <ApiSpecInput onSchemaSubmit={handleSchemaSubmit} />
+              <VisualMapping
+                schema={schema}
+                className={className}
+                onMappingChange={handleMappingChange}
+              />
             </div>
+          )}
 
-            {/* Step Arrow */}
-            {schema && (
-              <div className="flex justify-center">
-                <ArrowRight className="h-6 w-6 text-primary animate-pulse" />
-              </div>
-            )}
-
-            {/* Step 2: Visual Mapping */}
-            {schema && (
-              <div className="space-y-4">
-                <div className="flex items-center gap-3">
-                  <div className="flex items-center justify-center w-8 h-8 bg-primary rounded-full text-primary-foreground font-bold text-sm">
-                    2
-                  </div>
-                  <h2 className="text-lg font-semibold text-foreground">Configure Mapping</h2>
-                </div>
-                <VisualMapping
-                  schema={schema}
-                  className={className}
-                  onMappingChange={handleMappingChange}
-                />
-              </div>
-            )}
-          </div>
-
-          {/* Right Column - Output and Actions */}
+          {/* Step Arrow */}
           {schema && (
-            <div className="space-y-6">
+            <div className="flex justify-center">
+              <ArrowRight className="h-6 w-6 text-primary animate-pulse rotate-90" />
+            </div>
+          )}
+
+          {/* Step 3: Output and Actions */}
+          {schema && (
+            <div className="space-y-4">
               <div className="flex items-center gap-3">
                 <div className="flex items-center justify-center w-8 h-8 bg-primary rounded-full text-primary-foreground font-bold text-sm">
                   3
