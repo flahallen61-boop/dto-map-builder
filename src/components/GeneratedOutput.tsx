@@ -36,6 +36,43 @@ export const GeneratedOutput = ({ fieldMapping, defaults, className }: Generated
   const [isLoadingGenerate, setIsLoadingGenerate] = useState(false);
   const { toast } = useToast();
 
+  // Helper function to parse string values to their proper types
+  const parseValue = (value: any) => {
+    if (typeof value !== 'string') return value;
+    
+    // Parse boolean values
+    if (value === 'true') return true;
+    if (value === 'false') return false;
+    
+    // Parse null
+    if (value === 'null') return null;
+    
+    // Parse arrays (basic JSON array parsing)
+    if (value.startsWith('[') && value.endsWith(']')) {
+      try {
+        return JSON.parse(value);
+      } catch {
+        return value; // Return as string if parsing fails
+      }
+    }
+    
+    // Parse objects (basic JSON object parsing)
+    if (value.startsWith('{') && value.endsWith('}')) {
+      try {
+        return JSON.parse(value);
+      } catch {
+        return value; // Return as string if parsing fails
+      }
+    }
+    
+    // Parse numbers
+    if (!isNaN(Number(value)) && !isNaN(parseFloat(value))) {
+      return Number(value);
+    }
+    
+    return value; // Return as string for everything else
+  };
+
   // Generate the config JSON
   const configJson = {
     b2bName: className.toLowerCase().replace(/request$/, ''),
@@ -43,15 +80,15 @@ export const GeneratedOutput = ({ fieldMapping, defaults, className }: Generated
     fieldMapping: {
       ...fieldMapping,
       // Always include currentLocation coordinates in fieldMapping
-      ...(defaults['currentLocation.lat'] !== undefined && { 'currentLocation.lat': defaults['currentLocation.lat'] }),
-      ...(defaults['currentLocation.lng'] !== undefined && { 'currentLocation.lng': defaults['currentLocation.lng'] })
+      ...(defaults['currentLocation.lat'] !== undefined && { 'currentLocation.lat': parseValue(defaults['currentLocation.lat']) }),
+      ...(defaults['currentLocation.lng'] !== undefined && { 'currentLocation.lng': parseValue(defaults['currentLocation.lng']) })
     },
     defaults: {
       // Remove currentLocation coordinates from defaults as they should be in fieldMapping
       ...Object.fromEntries(
-        Object.entries(defaults).filter(([key]) => 
-          key !== 'currentLocation.lat' && key !== 'currentLocation.lng'
-        )
+        Object.entries(defaults)
+          .filter(([key]) => key !== 'currentLocation.lat' && key !== 'currentLocation.lng')
+          .map(([key, value]) => [key, parseValue(value)])
       )
     }
   };
