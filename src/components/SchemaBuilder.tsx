@@ -10,7 +10,7 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/component
 interface SchemaProperty {
   id: string;
   name: string;
-  type: 'string' | 'number' | 'boolean' | 'object' | 'array';
+  type: 'string' | 'number' | 'integer' | 'short' | 'boolean' | 'object' | 'array';
   required: boolean;
   properties?: SchemaProperty[];
   isOpen?: boolean;
@@ -118,6 +118,13 @@ export const SchemaBuilder = ({ onSchemaGenerated }: SchemaBuilderProps) => {
             items: { type: 'string' } // Default to string array
           };
           break;
+        case 'integer':
+        case 'short':
+          schema.properties[prop.name] = {
+            type: 'number',
+            format: prop.type
+          };
+          break;
         default:
           schema.properties[prop.name] = {
             type: prop.type
@@ -171,6 +178,8 @@ export const SchemaBuilder = ({ onSchemaGenerated }: SchemaBuilderProps) => {
             <SelectContent>
               <SelectItem value="string">String</SelectItem>
               <SelectItem value="number">Number</SelectItem>
+              <SelectItem value="integer">Integer</SelectItem>
+              <SelectItem value="short">Short</SelectItem>
               <SelectItem value="boolean">Boolean</SelectItem>
               <SelectItem value="object">Object</SelectItem>
               <SelectItem value="array">Array</SelectItem>
