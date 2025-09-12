@@ -4,8 +4,10 @@ import { Textarea } from '@/components/ui/textarea';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
-import { Upload, Code, Loader2, CheckCircle, AlertCircle, Sparkles } from 'lucide-react';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Upload, Code, Loader2, CheckCircle, AlertCircle, Sparkles, FormInput } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { SchemaBuilder } from './SchemaBuilder';
 
 interface ApiSpecInputProps {
   onSchemaSubmit: (schema: any, className: string) => void;
@@ -147,47 +149,64 @@ export const ApiSpecInput = ({ onSchemaSubmit }: ApiSpecInputProps) => {
           />
         </div>
 
-        <div className="space-y-2">
-          <div className="flex items-center justify-between">
-            <Label htmlFor="schema" className="text-foreground">JSON Schema</Label>
-            <div className="flex items-center gap-2">
-              <input
-                type="file"
-                accept=".json"
-                onChange={handleFileUpload}
-                className="hidden"
-                id="file-upload"
-              />
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={beautifyJson}
-                disabled={!schema.trim()}
-                className="bg-secondary border-border hover:bg-muted"
-              >
-                <Sparkles className="h-4 w-4 mr-2" />
-                Beautify
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => document.getElementById('file-upload')?.click()}
-                className="bg-secondary border-border hover:bg-muted"
-              >
-                <Upload className="h-4 w-4 mr-2" />
-                Upload
-              </Button>
-              {isValid === true && (
-                <CheckCircle className="h-4 w-4 text-success" />
-              )}
-              {isValid === false && (
-                <AlertCircle className="h-4 w-4 text-destructive" />
-              )}
-            </div>
-          </div>
-          <Textarea
-            id="schema"
-            placeholder={`{
+        <Tabs defaultValue="builder" className="w-full">
+          <TabsList className="grid w-full grid-cols-2">
+            <TabsTrigger value="builder" className="flex items-center gap-2">
+              <FormInput className="h-4 w-4" />
+              Form Builder
+            </TabsTrigger>
+            <TabsTrigger value="json" className="flex items-center gap-2">
+              <Code className="h-4 w-4" />
+              JSON Editor
+            </TabsTrigger>
+          </TabsList>
+          
+          <TabsContent value="builder" className="mt-4">
+            <SchemaBuilder onSchemaGenerated={handleSchemaChange} />
+          </TabsContent>
+          
+          <TabsContent value="json" className="mt-4">
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <Label htmlFor="schema" className="text-foreground">JSON Schema</Label>
+                <div className="flex items-center gap-2">
+                  <input
+                    type="file"
+                    accept=".json"
+                    onChange={handleFileUpload}
+                    className="hidden"
+                    id="file-upload"
+                  />
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={beautifyJson}
+                    disabled={!schema.trim()}
+                    className="bg-secondary border-border hover:bg-muted"
+                  >
+                    <Sparkles className="h-4 w-4 mr-2" />
+                    Beautify
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => document.getElementById('file-upload')?.click()}
+                    className="bg-secondary border-border hover:bg-muted"
+                  >
+                    <Upload className="h-4 w-4 mr-2" />
+                    Upload
+                  </Button>
+                  {isValid === true && (
+                    <CheckCircle className="h-4 w-4 text-success" />
+                  )}
+                  {isValid === false && (
+                    <AlertCircle className="h-4 w-4 text-destructive" />
+                  )}
+                </div>
+              </div>
+              <Textarea
+                id="schema"
+                placeholder={`{
   "type": "object",
   "properties": {
     "origin": {
@@ -205,11 +224,13 @@ export const ApiSpecInput = ({ onSchemaSubmit }: ApiSpecInputProps) => {
     }
   }
 }`}
-            value={schema}
-            onChange={(e) => handleSchemaChange(e.target.value)}
-            className="min-h-[200px] font-mono text-sm bg-code-bg border-code-border"
-          />
-        </div>
+                value={schema}
+                onChange={(e) => handleSchemaChange(e.target.value)}
+                className="min-h-[200px] font-mono text-sm bg-code-bg border-code-border"
+              />
+            </div>
+          </TabsContent>
+        </Tabs>
 
         <Button
           onClick={generateDTOs}
