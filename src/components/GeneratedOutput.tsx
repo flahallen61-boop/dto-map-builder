@@ -3,6 +3,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { 
   Eye, 
   Save, 
@@ -34,6 +36,7 @@ export const GeneratedOutput = ({ fieldMapping, defaults, className }: Generated
   const [isLoadingPreview, setIsLoadingPreview] = useState(false);
   const [isLoadingRegister, setIsLoadingRegister] = useState(false);
   const [isLoadingGenerate, setIsLoadingGenerate] = useState(false);
+  const [apiName, setApiName] = useState('');
   const { toast } = useToast();
 
   // Helper function to parse string values to their proper types
@@ -77,6 +80,7 @@ export const GeneratedOutput = ({ fieldMapping, defaults, className }: Generated
   const configJson = {
     b2bName: className.toLowerCase().replace(/request$/, ''),
     requestClass: `com.example.demoVersion.dto.${className}`,
+    ...(apiName && { apiName }),
     fieldMapping: {
       ...fieldMapping,
       // Always include currentLocation coordinates in fieldMapping
@@ -206,6 +210,28 @@ export const GeneratedOutput = ({ fieldMapping, defaults, className }: Generated
 
   return (
     <div className="space-y-6">
+      {/* API Name Input */}
+      <Card className="shadow-card gradient-card border-border">
+        <CardHeader>
+          <CardTitle className="text-foreground">API Configuration</CardTitle>
+          <CardDescription className="text-muted-foreground">
+            Configure API endpoint name for the mapping
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-2">
+            <Label htmlFor="apiName" className="text-foreground">API Name</Label>
+            <Input
+              id="apiName"
+              value={apiName}
+              onChange={(e) => setApiName(e.target.value)}
+              placeholder="/v2/search-results"
+              className="bg-background border-border text-foreground"
+            />
+          </div>
+        </CardContent>
+      </Card>
+
       {/* Configuration JSON */}
       <Card className="shadow-card gradient-card border-border">
         <CardHeader>
