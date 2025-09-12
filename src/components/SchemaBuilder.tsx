@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useImperativeHandle, forwardRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -21,8 +21,19 @@ interface SchemaBuilderProps {
   onSchemaGenerated: (schema: string) => void;
 }
 
-export const SchemaBuilder = ({ onSchemaGenerated }: SchemaBuilderProps) => {
+export interface SchemaBuilderRef {
+  getCurrentSchema: () => string;
+}
+
+export const SchemaBuilder = forwardRef<SchemaBuilderRef, SchemaBuilderProps>(({ onSchemaGenerated }, ref) => {
   const [properties, setProperties] = useState<SchemaProperty[]>([]);
+
+  useImperativeHandle(ref, () => ({
+    getCurrentSchema: () => {
+      const schema = generateJsonSchema(properties);
+      return JSON.stringify(schema, null, 2);
+    }
+  }));
 
   const generateId = () => Math.random().toString(36).substr(2, 9);
 
@@ -95,16 +106,11 @@ export const SchemaBuilder = ({ onSchemaGenerated }: SchemaBuilderProps) => {
   const generateJsonSchema = (props: SchemaProperty[]): any => {
     const schema: any = {
       type: 'object',
-      properties: {},
-      required: []
+      properties: {}
     };
 
     props.forEach(prop => {
       if (!prop.name) return;
-
-      if (prop.required) {
-        schema.required.push(prop.name);
-      }
 
       switch (prop.type) {
         case 'object':
@@ -284,4 +290,4 @@ export const SchemaBuilder = ({ onSchemaGenerated }: SchemaBuilderProps) => {
       </CardContent>
     </Card>
   );
-};
+});

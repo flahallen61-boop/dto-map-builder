@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Input } from '@/components/ui/input';
@@ -7,7 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Upload, Code, Loader2, CheckCircle, AlertCircle, Sparkles, FormInput } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { SchemaBuilder } from './SchemaBuilder';
+import { SchemaBuilder, SchemaBuilderRef } from './SchemaBuilder';
 
 interface ApiSpecInputProps {
   onSchemaSubmit: (schema: any, className: string) => void;
@@ -18,7 +18,9 @@ export const ApiSpecInput = ({ onSchemaSubmit }: ApiSpecInputProps) => {
   const [className, setClassName] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isValid, setIsValid] = useState<boolean | null>(null);
+  const [activeTab, setActiveTab] = useState('builder');
   const { toast } = useToast();
+  const schemaBuilderRef = useRef<SchemaBuilderRef>(null);
 
   const validateJson = (jsonString: string) => {
     try {
@@ -75,11 +77,24 @@ export const ApiSpecInput = ({ onSchemaSubmit }: ApiSpecInputProps) => {
   };
 
   const generateDTOs = async () => {
-    if (!schema || !className || !isValid) return;
+    if (!className) return;
+
+    // Auto-generate schema from builder if we're on the builder tab and no JSON schema exists
+    let currentSchema = schema;
+    if (activeTab === 'builder' && schemaBuilderRef.current) {
+      const builderSchema = schemaBuilderRef.current.getCurrentSchema();
+      if (builderSchema && builderSchema !== '{"type":"object","properties":{}}') {
+        currentSchema = builderSchema;
+        setSchema(builderSchema);
+        setIsValid(true);
+      }
+    }
+
+    if (!currentSchema) return;
 
     setIsLoading(true);
     try {
-      const parsedSchema = JSON.parse(schema);
+      const parsedSchema = JSON.parse(currentSchema);
       
       const response = await fetch(`http://localhost:8083/api/dto/generate?className=${className}`, {
         method: 'POST',
@@ -149,7 +164,7 @@ export const ApiSpecInput = ({ onSchemaSubmit }: ApiSpecInputProps) => {
           />
         </div>
 
-        <Tabs defaultValue="builder" className="w-full">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
           <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="builder" className="flex items-center gap-2">
               <FormInput className="h-4 w-4" />
@@ -162,7 +177,7 @@ export const ApiSpecInput = ({ onSchemaSubmit }: ApiSpecInputProps) => {
           </TabsList>
           
           <TabsContent value="builder" className="mt-4">
-            <SchemaBuilder onSchemaGenerated={handleSchemaChange} />
+            <SchemaBuilder ref={schemaBuilderRef} onSchemaGenerated={handleSchemaChange} />
           </TabsContent>
           
           <TabsContent value="json" className="mt-4">
@@ -234,7 +249,7 @@ export const ApiSpecInput = ({ onSchemaSubmit }: ApiSpecInputProps) => {
 
         <Button
           onClick={generateDTOs}
-          disabled={!schema || !className || !isValid || isLoading}
+          disabled={!className || isLoading}
           className="w-full gradient-primary hover:shadow-glow transition-smooth"
         >
           {isLoading ? (
