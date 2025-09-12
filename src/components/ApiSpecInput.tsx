@@ -164,6 +164,11 @@ export const ApiSpecInput = ({ onSchemaSubmit }: ApiSpecInputProps) => {
           />
         </div>
 
+        {/* Schema Builder - Always mounted to preserve state */}
+        <div className={activeTab === 'builder' ? 'block' : 'hidden'}>
+          <SchemaBuilder ref={schemaBuilderRef} onSchemaGenerated={handleSchemaChange} />
+        </div>
+
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
           <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="builder" className="flex items-center gap-2">
@@ -175,10 +180,6 @@ export const ApiSpecInput = ({ onSchemaSubmit }: ApiSpecInputProps) => {
               JSON Editor
             </TabsTrigger>
           </TabsList>
-          
-          <TabsContent value="builder" className="mt-4">
-            <SchemaBuilder ref={schemaBuilderRef} onSchemaGenerated={handleSchemaChange} />
-          </TabsContent>
           
           <TabsContent value="json" className="mt-4">
             <div className="space-y-2">
