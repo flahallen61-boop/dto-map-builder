@@ -158,20 +158,6 @@ export const SchemaBuilder = ({ onSchemaGenerated }: SchemaBuilderProps) => {
           style={{ marginLeft: `${indent}px` }}
         >
           <div className="flex items-center gap-3 mb-3">
-            {property.type === 'object' && (
-              <Collapsible open={property.isOpen} onOpenChange={() => toggleProperty(property.id)}>
-                <CollapsibleTrigger asChild>
-                  <Button variant="ghost" size="sm" className="p-1 h-6 w-6 hover:bg-muted">
-                    {property.isOpen ? (
-                      <ChevronDown className="h-3 w-3" />
-                    ) : (
-                      <ChevronRight className="h-3 w-3" />
-                    )}
-                  </Button>
-                </CollapsibleTrigger>
-              </Collapsible>
-            )}
-            
             <div className="flex-1">
               <Label htmlFor={`name-${property.id}`} className="text-sm font-medium text-foreground">
                 Property Name
@@ -211,6 +197,19 @@ export const SchemaBuilder = ({ onSchemaGenerated }: SchemaBuilderProps) => {
               <Badge variant="outline" className={getTypeColor(property.type)}>
                 {property.type}
               </Badge>
+              {property.type === 'object' && (
+                <Collapsible open={property.isOpen} onOpenChange={() => toggleProperty(property.id)}>
+                  <CollapsibleTrigger asChild>
+                    <Button variant="ghost" size="sm" className="p-1 h-8 w-8 hover:bg-muted">
+                      {property.isOpen ? (
+                        <ChevronDown className="h-4 w-4" />
+                      ) : (
+                        <ChevronRight className="h-4 w-4" />
+                      )}
+                    </Button>
+                  </CollapsibleTrigger>
+                </Collapsible>
+              )}
               <Button
                 variant="ghost"
                 size="sm"
