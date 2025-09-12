@@ -207,7 +207,7 @@ export const SchemaBuilder = ({ onSchemaGenerated }: SchemaBuilderProps) => {
               </Select>
             </div>
 
-            <div className="flex items-center justify-center gap-2 h-full">
+            <div className="flex items-center gap-2 mt-6">
               <Badge variant="outline" className={getTypeColor(property.type)}>
                 {property.type}
               </Badge>
