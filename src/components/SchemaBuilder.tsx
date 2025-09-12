@@ -206,20 +206,20 @@ export const SchemaBuilder = ({ onSchemaGenerated }: SchemaBuilderProps) => {
                 </SelectContent>
               </Select>
             </div>
-          </div>
 
-          <div className="flex items-center justify-between mb-3">
-            <Badge variant="outline" className={getTypeColor(property.type)}>
-              {property.type}
-            </Badge>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => removeProperty(property.id)}
-              className="p-1 h-8 w-8 text-destructive hover:text-destructive hover:bg-destructive/10"
-            >
-              <Trash2 className="h-4 w-4" />
-            </Button>
+            <div className="flex items-center gap-2 pt-4">
+              <Badge variant="outline" className={getTypeColor(property.type)}>
+                {property.type}
+              </Badge>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => removeProperty(property.id)}
+                className="p-1 h-8 w-8 text-destructive hover:text-destructive hover:bg-destructive/10"
+              >
+                <Trash2 className="h-4 w-4" />
+              </Button>
+            </div>
           </div>
 
           {property.type === 'object' && (
