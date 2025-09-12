@@ -113,13 +113,6 @@ export const SchemaBuilder = ({ onSchemaGenerated }: SchemaBuilderProps) => {
             ...generateJsonSchema(prop.properties || [])
           };
           break;
-        case 'integer':
-        case 'short':
-          schema.properties[prop.name] = {
-            type: 'number',
-            format: prop.type
-          };
-          break;
         default:
           schema.properties[prop.name] = {
             type: prop.type
